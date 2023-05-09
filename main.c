@@ -88,6 +88,21 @@ uint16_t read_ADC_value(void)
 #if 0
 void init_timer_2(void)		
 {
+	// Enable GPIOB clock & pin 10 as alternate function
+       RCC->AHBENR |= RCC_AHBENR_GPIOBEN;              
+       GPIOB->MODER |= GPIO_MODER_MODER10_1;          
+       // Select alternate function: TIM2_CH3
+       GPIOB->AFR[1] |= (2 << 2*4);                    
+       // Enable TIM2
+       RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;             
+       // Set clock source to 15 kHz
+       TIM2->PSC = 2;                            
+       // Setup ARR 
+       TIM2->ARR = 1023;                         
+       TIM2->CCMR2 |= TIM_CCMR2_OC3M_2 | TIM_CCMR2_OC3M_1 | TIM_CCMR2_OC3PE
+       TIM2->CCER |= TIM_CCER_CC3E;                   
+       TIM2->CR1 |= TIM_CR1_CEN;                       
+       TIM2->CCR3 = 1023 / 4;                           
 	
 }
 #endif
